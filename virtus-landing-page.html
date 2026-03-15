@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Virtus Gestão Condominial</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --dark: #0f0f0f;
+    --dark-2: #161616;
+    --dark-3: #1e1e1e;
+    --dark-4: #272727;
+    --gray: #888;
+    --gray-light: #b0b0b0;
+    --white: #f5f4f0;
+    --accent: #c8c0b0;
+    --gold: #b8a878;
+    --border: rgba(255,255,255,0.08);
+    --border-accent: rgba(200,192,176,0.25);
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--dark);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+  .serif { font-family: 'Cormorant Garamond', serif; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.25rem 4rem;
+    background: rgba(15,15,15,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo { display: flex; align-items: center; gap: 1rem; }
+  .nav-logo svg { width: 36px; height: 36px; }
+  .nav-brand { font-size: 1.1rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; }
+  .nav-sub { font-size: 0.62rem; letter-spacing: 0.22em; color: var(--gray); text-transform: uppercase; display: block; margin-top: -2px; }
+  nav ul { list-style: none; display: flex; gap: 2.5rem; }
+  nav ul a { color: var(--gray-light); text-decoration: none; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.3s; }
+  nav ul a:hover { color: var(--white); }
+  .nav-cta {
+    background: transparent;
+    border: 1px solid var(--border-accent);
+    color: var(--accent);
+    padding: 0.55rem 1.4rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .nav-cta:hover { background: var(--accent); color: var(--dark); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 8rem 4rem 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 80% at 70% 50%, rgba(184,168,120,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    opacity: 0.5;
+  }
+  .hero-content { max-width: 680px; position: relative; z-index: 2; }
+  .hero-eyebrow { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2rem; }
+  .eyebrow-line { width: 32px; height: 1px; background: var(--gold); }
+  .eyebrow-text { font-size: 0.72rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.2rem, 6vw, 5.5rem);
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 em { font-style: italic; color: var(--accent); }
+  .hero-desc { font-size: 1rem; color: var(--gray-light); line-height: 1.8; max-width: 520px; margin-bottom: 2.5rem; }
+  .hero-actions { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--white); color: var(--dark);
+    border: none; padding: 0.9rem 2rem;
+    font-size: 0.8rem; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    cursor: pointer; transition: all 0.3s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .btn-primary:hover { background: var(--accent); }
+  .btn-ghost {
+    background: transparent; color: var(--gray-light);
+    border: 1px solid var(--border); padding: 0.9rem 2rem;
+    font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase;
+    cursor: pointer; transition: all 0.3s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+  .hero-visual {
+    position: absolute; right: 4rem; top: 50%; transform: translateY(-50%);
+    z-index: 1; opacity: 0.12;
+  }
+  .hero-visual svg { width: 420px; height: 420px; }
+
+  /* STATS */
+  .stats-bar {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 2.5rem 4rem;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+  }
+  .stat-item { padding: 0 2rem; border-right: 1px solid var(--border); text-align: center; }
+  .stat-item:first-child { padding-left: 0; }
+  .stat-item:last-child { border-right: none; }
+  .stat-number { font-family: 'Cormorant Garamond', serif; font-size: 2.8rem; font-weight: 300; line-height: 1; color: var(--white); }
+  .stat-label { font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray); margin-top: 0.4rem; }
+
+  /* SECTION BASE */
+  section { padding: 6rem 4rem; }
+  .section-eyebrow { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.2rem, 4vw, 3.5rem); font-weight: 300; line-height: 1.1; margin-bottom: 1rem; }
+  .section-title em { font-style: italic; color: var(--accent); }
+  .section-desc { font-size: 0.95rem; color: var(--gray-light); max-width: 560px; line-height: 1.8; margin-bottom: 3rem; }
+
+  /* PROPÓSITO */
+  .purpose { background: var(--dark-2); }
+  .purpose-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+  .purpose-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.6rem, 3vw, 2.6rem);
+    font-weight: 300; line-height: 1.35; color: var(--white);
+    padding-left: 2rem; border-left: 1px solid var(--gold);
+  }
+  .purpose-quote em { color: var(--accent); font-style: italic; }
+  .purpose-text { font-size: 0.9rem; color: var(--gray-light); line-height: 1.9; }
+  .purpose-promise { margin-top: 2rem; padding: 1.5rem; border: 1px solid var(--border-accent); background: rgba(184,168,120,0.04); }
+  .promise-label { font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
+  .promise-text { font-size: 0.88rem; color: var(--white); line-height: 1.7; }
+
+  /* SERVIÇOS */
+  .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 3rem; }
+  .service-card { background: var(--dark); padding: 2.5rem 2rem; transition: background 0.3s; }
+  .service-card:hover { background: var(--dark-3); }
+  .service-num { font-family: 'Cormorant Garamond', serif; font-size: 0.8rem; color: var(--gold); letter-spacing: 0.1em; margin-bottom: 0.75rem; }
+  .service-title { font-size: 1.05rem; font-weight: 500; margin-bottom: 0.75rem; letter-spacing: 0.02em; }
+  .service-desc { font-size: 0.83rem; color: var(--gray-light); line-height: 1.8; }
+
+  /* DIFERENCIAIS */
+  .diffs { background: var(--dark-2); }
+  .diffs-layout { display: grid; grid-template-columns: 1fr 1.2fr; gap: 5rem; align-items: start; }
+  .diff-list { display: flex; flex-direction: column; }
+  .diff-item { padding: 1.5rem 0; border-bottom: 1px solid var(--border); display: flex; gap: 1.5rem; align-items: flex-start; }
+  .diff-item:first-child { border-top: 1px solid var(--border); }
+  .diff-marker { width: 6px; height: 6px; border: 1px solid var(--gold); transform: rotate(45deg); margin-top: 0.5rem; flex-shrink: 0; }
+  .diff-content h3 { font-size: 0.95rem; font-weight: 500; margin-bottom: 0.35rem; }
+  .diff-content p { font-size: 0.82rem; color: var(--gray-light); line-height: 1.7; }
+  .diffs-visual { display: flex; flex-direction: column; gap: 1rem; }
+  .manifesto-card { background: var(--dark-3); border: 1px solid var(--border); padding: 2rem; }
+  .manifesto-card h4 { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 300; margin-bottom: 0.75rem; line-height: 1.3; }
+  .manifesto-card h4 em { font-style: italic; color: var(--accent); }
+  .manifesto-card p { font-size: 0.82rem; color: var(--gray-light); line-height: 1.7; }
+
+  /* PARA QUEM */
+  .audience { background: var(--dark); }
+  .audience-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
+  .audience-card { border: 1px solid var(--border); padding: 2rem 1.75rem; transition: border-color 0.3s; }
+  .audience-card:hover { border-color: var(--border-accent); }
+  .audience-icon { margin-bottom: 1.25rem; }
+  .audience-title { font-size: 1rem; font-weight: 500; margin-bottom: 0.6rem; }
+  .audience-text { font-size: 0.82rem; color: var(--gray-light); line-height: 1.8; }
+
+  /* DEPOIMENTO */
+  .testimonial { background: var(--dark-2); text-align: center; padding: 6rem 4rem; }
+  .testimonial-quote { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 300; font-style: italic; max-width: 780px; margin: 0 auto 2rem; line-height: 1.45; color: var(--white); }
+  .testimonial-author { font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray); }
+  .testimonial-divider { width: 40px; height: 1px; background: var(--gold); margin: 1.25rem auto; }
+
+  /* VALORES */
+  .values { background: var(--dark); }
+  .values-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); margin-top: 3rem; }
+  .value-item { background: var(--dark); padding: 2rem 1.5rem; text-align: center; }
+  .value-diamond { width: 10px; height: 10px; border: 1px solid var(--gold); transform: rotate(45deg); margin: 0 auto 1.25rem; }
+  .value-name { font-size: 0.8rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.5rem; }
+  .value-desc { font-size: 0.78rem; color: var(--gray); line-height: 1.7; }
+
+  /* REGIÃO */
+  .region { background: var(--dark-2); display: flex; align-items: center; justify-content: space-between; gap: 4rem; padding: 5rem 4rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .region-text h2 { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; font-weight: 300; line-height: 1.2; margin-bottom: 0.75rem; }
+  .region-text h2 em { font-style: italic; color: var(--accent); }
+  .region-text p { font-size: 0.88rem; color: var(--gray-light); max-width: 420px; line-height: 1.8; }
+  .region-tags { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.5rem; }
+  .region-tag { border: 1px solid var(--border); padding: 0.4rem 1rem; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-light); }
+
+  /* CTA FINAL */
+  .cta-final { background: var(--dark); text-align: center; padding: 8rem 4rem; position: relative; overflow: hidden; }
+  .cta-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 50% 60% at 50% 50%, rgba(184,168,120,0.06) 0%, transparent 70%); pointer-events: none; }
+  .cta-final h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 300; line-height: 1.1; margin-bottom: 1rem; position: relative; }
+  .cta-final h2 em { font-style: italic; color: var(--accent); }
+  .cta-final p { font-size: 0.95rem; color: var(--gray-light); max-width: 480px; margin: 0 auto 2.5rem; line-height: 1.8; position: relative; }
+  .cta-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; position: relative; }
+
+  /* MODAL */
+  .modal-overlay { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; padding: 2rem; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--dark-2); border: 1px solid var(--border-accent); padding: 3rem; max-width: 520px; width: 100%; position: relative; }
+  .modal-close { position: absolute; top: 1.25rem; right: 1.25rem; background: none; border: none; color: var(--gray); font-size: 1.2rem; cursor: pointer; }
+  .modal h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; margin-bottom: 0.4rem; }
+  .modal p { font-size: 0.82rem; color: var(--gray-light); margin-bottom: 2rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-group { margin-bottom: 1rem; }
+  .form-group label { display: block; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray); margin-bottom: 0.4rem; }
+  .form-group input, .form-group select, .form-group textarea { width: 100%; background: var(--dark-3); border: 1px solid var(--border); color: var(--white); padding: 0.7rem 0.9rem; font-size: 0.85rem; font-family: 'DM Sans', sans-serif; outline: none; transition: border-color 0.3s; }
+  .form-group input:focus, .form-group select:focus { border-color: var(--border-accent); }
+  .form-group select option { background: var(--dark-2); }
+  .form-submit { width: 100%; background: var(--white); color: var(--dark); border: none; padding: 0.9rem; font-size: 0.8rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.3s; margin-top: 0.5rem; }
+  .form-submit:hover { background: var(--accent); }
+
+  /* FOOTER */
+  footer { background: var(--dark-2); border-top: 1px solid var(--border); padding: 3rem 4rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; }
+  .footer-brand { font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gray); }
+  .footer-links { display: flex; gap: 2rem; }
+  .footer-links a { font-size: 0.72rem; color: var(--gray); text-decoration: none; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.3s; }
+  .footer-links a:hover { color: var(--accent); }
+  .footer-legal { font-size: 0.68rem; color: var(--gray); }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    nav ul { display: none; }
+    section, .stats-bar, .hero, .region { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .hero { padding-top: 6rem; }
+    .hero-visual { display: none; }
+    .purpose-inner, .diffs-layout { grid-template-columns: 1fr; gap: 2.5rem; }
+    .services-grid, .audience-grid { grid-template-columns: 1fr; }
+    .values-grid { grid-template-columns: repeat(2, 1fr); }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+    .stat-item { border-right: none; border-bottom: 1px solid var(--border); }
+    .region { flex-direction: column; padding: 3.5rem 1.5rem; }
+    footer { flex-direction: column; gap: 1rem; padding: 2rem 1.5rem; }
+    .form-row { grid-template-columns: 1fr; }
+    .cta-final { padding: 5rem 1.5rem; }
+    .testimonial { padding: 4rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="18,2 10,10 26,10" fill="none" stroke="#888" stroke-width="1.2"/>
+      <polygon points="4,12 18,12 18,34" fill="none" stroke="#f5f4f0" stroke-width="1.4"/>
+      <polygon points="32,12 18,12 18,34" fill="none" stroke="#b8a878" stroke-width="1.4"/>
+    </svg>
+    <div>
+      <span class="nav-brand">Virtus</span>
+      <span class="nav-sub">Gestão Condominial</span>
+    </div>
+  </div>
+  <ul>
+    <li><a href="#servicos">Serviços</a></li>
+    <li><a href="#diferenciais">Diferenciais</a></li>
+    <li><a href="#para-quem">Para quem</a></li>
+    <li><a href="#valores">Valores</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.querySelector('.modal-overlay').classList.add('open')">Solicitar proposta</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="inicio">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <div class="eyebrow-line"></div>
+      <span class="eyebrow-text">Grande Florianópolis · SC</span>
+    </div>
+    <h1>Gestão condominial <em>firme, justa</em> e transparente.</h1>
+    <p class="hero-desc">A Virtus conduz seu condomínio com método, imparcialidade e respeito à legislação — oferecendo previsibilidade onde existe conflito e improviso.</p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="document.querySelector('.modal-overlay').classList.add('open')">Solicitar proposta</button>
+      <button class="btn-ghost" onclick="document.getElementById('servicos').scrollIntoView({behavior:'smooth'})">Conhecer serviços</button>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="200,30 100,120 300,120" stroke="white" stroke-width="1.5" fill="none"/>
+      <polygon points="60,140 200,380 200,140" stroke="white" stroke-width="2" fill="none"/>
+      <polygon points="340,140 200,380 200,140" stroke="white" stroke-width="2" fill="none"/>
+      <polygon points="200,30 100,120 300,120" stroke="white" stroke-width="1" fill="none" opacity="0.4" transform="translate(8,8)"/>
+    </svg>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <div class="stat-number">+5</div>
+    <div class="stat-label">Anos de experiência</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">100%</div>
+    <div class="stat-label">Dentro da legalidade</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">3×</div>
+    <div class="stat-label">Tipos de condomínio atendidos</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">0</div>
+    <div class="stat-label">Tolerância com irregularidades</div>
+  </div>
+</div>
+
+<!-- PROPÓSITO -->
+<section class="purpose" id="proposito">
+  <div class="purpose-inner">
+    <div>
+      <div class="section-eyebrow">
+        <div class="eyebrow-line"></div>
+        <span class="eyebrow-text">Propósito</span>
+      </div>
+      <p class="purpose-quote">Gerir o patrimônio coletivo com responsabilidade, legalidade <em>e empatia.</em></p>
+    </div>
+    <div>
+      <p class="purpose-text">A Virtus não faz gestão improvisada, emocional ou personalista. Atua com método, escuta ativa e decisões fundamentadas em critérios técnicos e legais — com foco na valorização do patrimônio coletivo e na qualidade do convívio.</p>
+      <div class="purpose-promise">
+        <div class="promise-label">Promessa central</div>
+        <p class="promise-text">Tranquilidade na gestão, clareza nas decisões e segurança para o coletivo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVIÇOS -->
+<section id="servicos">
+  <div class="section-eyebrow">
+    <div class="eyebrow-line"></div>
+    <span class="eyebrow-text">O que fazemos</span>
+  </div>
+  <h2 class="section-title">Gestão <em>completa</em> do seu condomínio</h2>
+  <p class="section-desc">Atuamos nas dimensões técnica, legal, financeira e humana — para que seu condomínio funcione com ordem, previsibilidade e harmonia.</p>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-num">01</div>
+      <div class="service-title">Gestão Financeira</div>
+      <p class="service-desc">Controle rigoroso das receitas e despesas, prestação de contas clara e transparente, redução da inadimplência e planejamento orçamentário com linguagem acessível aos condôminos.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-num">02</div>
+      <div class="service-title">Assessoria Jurídica e Legal</div>
+      <p class="service-desc">Atuação rigorosa dentro do Código Civil, convenção condominial e legislações vigentes. Orientação jurídica para conflitos, cobranças e assembleias com segurança institucional.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-num">03</div>
+      <div class="service-title">Gestão de Conflitos</div>
+      <p class="service-desc">Mediação imparcial entre moradores, conselho e demais partes. Comunicação clara e didática que transforma conflito em diálogo e diálogo em solução.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-num">04</div>
+      <div class="service-title">Administração de Pessoal</div>
+      <p class="service-desc">Gestão de funcionários do condomínio com conformidade trabalhista, controle de jornada, folha de pagamento e processos de contratação e rescisão.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-num">05</div>
+      <div class="service-title">Manutenção e Infraestrutura</div>
+      <p class="service-desc">Planejamento preventivo e corretivo das áreas comuns, com seleção criteriosa de fornecedores, acompanhamento de obras e controle de qualidade nas entregas.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-num">06</div>
+      <div class="service-title">Comunicação Condominial</div>
+      <p class="service-desc">Assembleias conduzidas com método, comunicados objetivos e canais organizados para que cada morador saiba o que acontece no seu condomínio, quando e por quê.</p>
+    </div>
+  </div>
+</section>
+
+<!-- DIFERENCIAIS -->
+<section class="diffs" id="diferenciais">
+  <div class="diffs-layout">
+    <div>
+      <div class="section-eyebrow">
+        <div class="eyebrow-line"></div>
+        <span class="eyebrow-text">Diferenciais</span>
+      </div>
+      <h2 class="section-title">Por que a <em>Virtus</em></h2>
+      <div class="diff-list">
+        <div class="diff-item">
+          <div class="diff-marker"></div>
+          <div class="diff-content">
+            <h3>Imparcialidade real, não declarada</h3>
+            <p>Decisões baseadas em critérios técnicos e legais, sem favoritismos — mesmo quando isso representa risco de perda de contrato.</p>
+          </div>
+        </div>
+        <div class="diff-item">
+          <div class="diff-marker"></div>
+          <div class="diff-content">
+            <h3>Comunicação didática e objetiva</h3>
+            <p>Traduzimos o técnico em linguagem acessível. Moradores informados tomam melhores decisões coletivas.</p>
+          </div>
+        </div>
+        <div class="diff-item">
+          <div class="diff-marker"></div>
+          <div class="diff-content">
+            <h3>Método com escuta personalizada</h3>
+            <p>Cada condomínio tem sua história, sua cultura e seus desafios. Aplicamos o mesmo método com atenção às particularidades de cada comunidade.</p>
+          </div>
+        </div>
+        <div class="diff-item">
+          <div class="diff-marker"></div>
+          <div class="diff-content">
+            <h3>Valorização patrimonial</h3>
+            <p>Uma gestão séria, legal e transparente protege e valoriza o maior patrimônio coletivo dos condôminos.</p>
+          </div>
+        </div>
+        <div class="diff-item">
+          <div class="diff-marker"></div>
+          <div class="diff-content">
+            <h3>Visão de longo prazo</h3>
+            <p>Não vendemos soluções rápidas. Construímos estruturas sólidas que protegem o condomínio agora e no futuro.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="diffs-visual">
+      <div class="manifesto-card">
+        <h4>A Virtus não <em>personaliza decisões</em>, mas personaliza a escuta.</h4>
+        <p>O método é único. A aplicação respeita cada realidade. Essa combinação é o que nos permite ser firmes e humanos ao mesmo tempo.</p>
+      </div>
+      <div class="manifesto-card">
+        <h4>Preferimos romper <em>contratos</em> a comprometer nossos princípios.</h4>
+        <p>Quando um condomínio exige conivência com irregularidades, não negociamos nossa integridade. Essa é a fundação em que construímos tudo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARA QUEM -->
+<section class="audience" id="para-quem">
+  <div class="section-eyebrow">
+    <div class="eyebrow-line"></div>
+    <span class="eyebrow-text">Para quem</span>
+  </div>
+  <h2 class="section-title">A Virtus é para quem <em>valoriza</em> a gestão séria</h2>
+  <p class="section-desc">Não atendemos a todos. Atendemos a quem entende que um condomínio bem gerido exige diálogo, regras e responsabilidade coletiva.</p>
+  <div class="audience-grid">
+    <div class="audience-card">
+      <div class="audience-icon">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <rect x="4" y="8" width="20" height="16" rx="1" stroke="#b8a878" stroke-width="1.2"/>
+          <path d="M10 8V6a4 4 0 018 0v2" stroke="#b8a878" stroke-width="1.2"/>
+          <circle cx="14" cy="16" r="2" stroke="#b8a878" stroke-width="1"/>
+        </svg>
+      </div>
+      <div class="audience-title">Condomínios Residenciais</div>
+      <p class="audience-text">Edifícios e condomínios horizontais que buscam organização financeira, harmonia entre moradores e conformidade legal permanente.</p>
+    </div>
+    <div class="audience-card">
+      <div class="audience-icon">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <rect x="3" y="6" width="22" height="18" rx="1" stroke="#b8a878" stroke-width="1.2"/>
+          <line x1="3" y1="11" x2="25" y2="11" stroke="#b8a878" stroke-width="1"/>
+          <rect x="7" y="14" width="5" height="10" stroke="#b8a878" stroke-width="1"/>
+          <rect x="16" y="14" width="5" height="5" stroke="#b8a878" stroke-width="1"/>
+        </svg>
+      </div>
+      <div class="audience-title">Condomínios Comerciais e Mistos</div>
+      <p class="audience-text">Empreendimentos com múltiplas finalidades que precisam de gestão técnica e imparcial para equilibrar interesses distintos com eficiência.</p>
+    </div>
+    <div class="audience-card">
+      <div class="audience-icon">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <polygon points="14,4 4,22 24,22" stroke="#b8a878" stroke-width="1.2" fill="none"/>
+          <line x1="14" y1="4" x2="14" y2="22" stroke="#b8a878" stroke-width="1" opacity="0.5"/>
+        </svg>
+      </div>
+      <div class="audience-title">Construtoras e Incorporadoras</div>
+      <p class="audience-text">Novos empreendimentos que precisam de gestão profissional desde a entrega das chaves, garantindo uma comunidade organizada e valorizada desde o início.</p>
+    </div>
+    <div class="audience-card">
+      <div class="audience-icon">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <circle cx="14" cy="10" r="4" stroke="#b8a878" stroke-width="1.2"/>
+          <path d="M6 22c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#b8a878" stroke-width="1.2"/>
+        </svg>
+      </div>
+      <div class="audience-title">Conselhos de Condomínio</div>
+      <p class="audience-text">Grupos de conselheiros que desejam uma administração parceira, transparente e tecnicamente fundamentada para apoiar decisões coletivas com segurança.</p>
+    </div>
+    <div class="audience-card">
+      <div class="audience-icon">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <rect x="5" y="5" width="18" height="18" rx="1" stroke="#b8a878" stroke-width="1.2"/>
+          <path d="M9 14l4 4 6-6" stroke="#b8a878" stroke-width="1.2"/>
+        </svg>
+      </div>
+      <div class="audience-title">Síndicos Moradores</div>
+      <p class="audience-text">Moradores eleitos que querem apoio técnico e jurídico profissional para exercer bem seu papel sem sobrecarga ou exposição a riscos desnecessários.</p>
+    </div>
+    <div class="audience-card" style="border-color: rgba(184,168,120,0.2); background: rgba(184,168,120,0.03);">
+      <div class="audience-icon">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <line x1="14" y1="4" x2="14" y2="24" stroke="#b8a878" stroke-width="1.2"/>
+          <line x1="4" y1="14" x2="24" y2="14" stroke="#b8a878" stroke-width="1.2"/>
+        </svg>
+      </div>
+      <div class="audience-title">Não somos para todos</div>
+      <p class="audience-text" style="color: #666;">A Virtus não atende condomínios que rejeitam regras, esperam conivência com irregularidades ou buscam benefícios individuais em detrimento do coletivo.</p>
+    </div>
+  </div>
+</section>
+
+<!-- DEPOIMENTO -->
+<div class="testimonial">
+  <div class="testimonial-divider"></div>
+  <p class="testimonial-quote">"Com a Virtus, finalmente entendemos o que acontece no nosso condomínio. Cada decisão tem uma razão clara, cada centavo é prestado de conta. Isso mudou completamente a relação entre os moradores."</p>
+  <div class="testimonial-divider"></div>
+  <p class="testimonial-author">Conselho de Condomínio · Florianópolis, SC</p>
+</div>
+
+<!-- VALORES -->
+<section class="values" id="valores">
+  <div class="section-eyebrow">
+    <div class="eyebrow-line"></div>
+    <span class="eyebrow-text">Valores</span>
+  </div>
+  <h2 class="section-title">O que <em>nos orienta</em> sempre</h2>
+  <p class="section-desc">Estes valores não são aspirações. São critérios que orientam cada decisão — inclusive quando eles têm custo.</p>
+  <div class="values-grid">
+    <div class="value-item">
+      <div class="value-diamond"></div>
+      <div class="value-name">Imparcialidade</div>
+      <p class="value-desc">Decisões técnicas, nunca pessoais. Sem favorecidos, sem conivência.</p>
+    </div>
+    <div class="value-item">
+      <div class="value-diamond"></div>
+      <div class="value-name">Transparência</div>
+      <p class="value-desc">Toda informação relevante ao coletivo chega de forma clara e acessível.</p>
+    </div>
+    <div class="value-item">
+      <div class="value-diamond"></div>
+      <div class="value-name">Legalidade</div>
+      <p class="value-desc">Operamos dentro da lei, sempre. Sem atalhos, sem exceções.</p>
+    </div>
+    <div class="value-item">
+      <div class="value-diamond"></div>
+      <div class="value-name">Empatia</div>
+      <p class="value-desc">Escutamos antes de decidir. Entendemos o humano por trás do conflito.</p>
+    </div>
+    <div class="value-item">
+      <div class="value-diamond"></div>
+      <div class="value-name">Comunicação ativa</div>
+      <p class="value-desc">Nos antecipamos. Não esperamos o problema chegar ao morador.</p>
+    </div>
+    <div class="value-item">
+      <div class="value-diamond"></div>
+      <div class="value-name">Pertencimento</div>
+      <p class="value-desc">Um condomínio saudável é uma comunidade. Cultivamos esse senso coletivo.</p>
+    </div>
+    <div class="value-item">
+      <div class="value-diamond"></div>
+      <div class="value-name">Método</div>
+      <p class="value-desc">Não improvisamos. Cada processo tem estrutura, critério e responsável.</p>
+    </div>
+    <div class="value-item">
+      <div class="value-diamond"></div>
+      <div class="value-name">Qualidade</div>
+      <p class="value-desc">O padrão de entrega não cai diante da pressão, do conflito ou do prazo.</p>
+    </div>
+  </div>
+</section>
+
+<!-- REGIÃO -->
+<div class="region">
+  <div class="region-text">
+    <h2>Atuação na <em>Grande Florianópolis</em></h2>
+    <p>Com foco na capital catarinense e região metropolitana, a Virtus combina conhecimento local com método escalável — e visão de expansão nacional.</p>
+    <div class="region-tags">
+      <span class="region-tag">Florianópolis</span>
+      <span class="region-tag">São José</span>
+      <span class="region-tag">Palhoça</span>
+      <span class="region-tag">Biguaçu</span>
+      <span class="region-tag">Governador Celso Ramos</span>
+    </div>
+  </div>
+  <button class="btn-primary" onclick="document.querySelector('.modal-overlay').classList.add('open')">Verificar disponibilidade</button>
+</div>
+
+<!-- CTA FINAL -->
+<section class="cta-final">
+  <div class="cta-bg"></div>
+  <h2>Seu condomínio merece <em>gestão de verdade.</em></h2>
+  <p>Converse com a Virtus. Sem compromisso, sem pressão. Apenas uma conversa honesta sobre o que seu condomínio precisa.</p>
+  <div class="cta-actions">
+    <button class="btn-primary" onclick="document.querySelector('.modal-overlay').classList.add('open')">Solicitar proposta gratuita</button>
+    <button class="btn-ghost">Falar no WhatsApp</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">Virtus Gestão Condominial · Grande Florianópolis · SC</div>
+  <div class="footer-links">
+    <a href="#servicos">Serviços</a>
+    <a href="#diferenciais">Diferenciais</a>
+    <a href="#valores">Valores</a>
+  </div>
+  <div class="footer-legal">© 2026 Virtus. Todos os direitos reservados.</div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal">
+    <button class="modal-close" onclick="document.querySelector('.modal-overlay').classList.remove('open')">✕</button>
+    <h3>Solicitar proposta</h3>
+    <p>Preencha os dados abaixo e entraremos em contato em até 24 horas.</p>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Nome</label>
+        <input type="text" placeholder="Seu nome">
+      </div>
+      <div class="form-group">
+        <label>Telefone</label>
+        <input type="tel" placeholder="(48) 99999-9999">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>E-mail</label>
+      <input type="email" placeholder="seu@email.com">
+    </div>
+    <div class="form-group">
+      <label>Tipo de condomínio</label>
+      <select>
+        <option value="">Selecione...</option>
+        <option>Residencial</option>
+        <option>Comercial</option>
+        <option>Misto</option>
+        <option>Construtora / Incorporadora</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Nº de unidades</label>
+        <input type="number" placeholder="Ex: 48">
+      </div>
+      <div class="form-group">
+        <label>Cidade</label>
+        <input type="text" placeholder="Florianópolis">
+      </div>
+    </div>
+    <button class="form-submit">Enviar solicitação</button>
+  </div>
+</div>
+
+</body>
+</html>
