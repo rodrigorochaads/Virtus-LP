@@ -165,7 +165,7 @@
   .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 3rem; }
   .service-card { background: var(--dark); padding: 2.5rem 2rem; transition: background 0.3s; }
   .service-card:hover { background: var(--dark-3); }
-  .service-num { font-family: 'Cormorant Garamond', serif; font-size: 0.8rem; color: var(--gold); letter-spacing: 0.1em; margin-bottom: 0.75rem; }
+  .service-num { font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: var(--gold); letter-spacing: 0.1em; margin-bottom: 0.75rem; font-weight: 300; line-height: 1; }
   .service-title { font-size: 1.05rem; font-weight: 500; margin-bottom: 0.75rem; letter-spacing: 0.02em; }
   .service-desc { font-size: 0.83rem; color: var(--gray-light); line-height: 1.8; }
 
@@ -236,6 +236,9 @@
   .form-group input, .form-group select, .form-group textarea { width: 100%; background: var(--dark-3); border: 1px solid var(--border); color: var(--white); padding: 0.7rem 0.9rem; font-size: 0.85rem; font-family: 'DM Sans', sans-serif; outline: none; transition: border-color 0.3s; }
   .form-group input:focus, .form-group select:focus { border-color: var(--border-accent); }
   .form-group select option { background: var(--dark-2); }
+
+  .step-btn { background: var(--dark-3); border: 1px solid var(--border); color: var(--white); padding: 1.1rem 1rem; font-size: 0.85rem; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.3s; text-align: center; }
+  .step-btn:hover { border-color: var(--border-accent); background: var(--dark-4); }
   .form-submit { width: 100%; background: var(--white); color: var(--dark); border: none; padding: 0.9rem; font-size: 0.8rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.3s; margin-top: 0.5rem; }
   .form-submit:hover { background: var(--accent); }
 
@@ -669,46 +672,87 @@
 <!-- MODAL -->
 <div class="modal-overlay" onclick="if(event.target===this)this.classList.remove('open')">
   <div class="modal">
-    <button class="modal-close" onclick="document.querySelector('.modal-overlay').classList.remove('open')">✕</button>
-    <h3>Solicitar proposta</h3>
-    <p>Preencha os dados abaixo e entraremos em contato em até 24 horas.</p>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Nome</label>
-        <input type="text" placeholder="Seu nome">
-      </div>
-      <div class="form-group">
-        <label>Telefone</label>
-        <input type="tel" placeholder="(48) 99999-9999">
-      </div>
-    </div>
-    <div class="form-group">
-      <label>E-mail</label>
-      <input type="email" placeholder="seu@email.com">
-    </div>
-    <div class="form-group">
-      <label>Tipo de condomínio</label>
-      <select>
-        <option value="">Selecione...</option>
-        <option>Residencial</option>
-        <option>Comercial</option>
-        <option>Misto</option>
-        <option>Construtora / Incorporadora</option>
-      </select>
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Nº de unidades</label>
-        <input type="number" placeholder="Ex: 48">
-      </div>
-      <div class="form-group">
-        <label>Cidade</label>
-        <input type="text" placeholder="Florianópolis">
+    <button class="modal-close" onclick="document.querySelector('.modal-overlay').classList.remove('open'); resetForm();">✕</button>
+
+    <!-- PASSO 1 -->
+    <div id="form-step-1">
+      <h3>Seu condomínio está pronto<br>para uma gestão de verdade?</h3>
+      <p>Responda duas perguntas rápidas e receba um contato qualificado.</p>
+      <p style="font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.25rem;">Passo 1 de 3 — Perfil do condomínio</p>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+        <button onclick="nextStep(1,'Residencial')" class="step-btn">🏢 Residencial</button>
+        <button onclick="nextStep(1,'Comercial')" class="step-btn">🏬 Comercial</button>
+        <button onclick="nextStep(1,'Misto')" class="step-btn">🔀 Misto</button>
+        <button onclick="nextStep(1,'Construtora')" class="step-btn">🏗️ Construtora</button>
       </div>
     </div>
-    <button class="form-submit">Enviar solicitação</button>
+
+    <!-- PASSO 2 -->
+    <div id="form-step-2" style="display:none;">
+      <h3>Quase lá.</h3>
+      <p style="font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.25rem;">Passo 2 de 3 — Número de unidades</p>
+      <div style="display: grid; grid-template-columns: 1fr; gap: 0.75rem;">
+        <button onclick="nextStep(2,'Até 50 unidades')" class="step-btn">Até 50 unidades</button>
+        <button onclick="nextStep(2,'51 a 150 unidades')" class="step-btn">51 a 150 unidades</button>
+        <button onclick="nextStep(2,'Mais de 150 unidades')" class="step-btn">Mais de 150 unidades</button>
+      </div>
+    </div>
+
+    <!-- PASSO 3 -->
+    <div id="form-step-3" style="display:none;">
+      <h3>Onde enviamos<br>sua proposta?</h3>
+      <p style="font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.25rem;">Passo 3 de 3 — Seus dados</p>
+      <form onsubmit="submitForm(event);">
+        <div class="form-group">
+          <label>Nome</label>
+          <input type="text" id="lead-nome" placeholder="Seu nome" required>
+        </div>
+        <div class="form-group">
+          <label>WhatsApp</label>
+          <input type="tel" id="lead-whats" placeholder="(48) 99999-9999" required>
+        </div>
+        <div class="form-group">
+          <label>E-mail corporativo</label>
+          <input type="email" id="lead-email" placeholder="seu@email.com">
+        </div>
+        <button type="submit" class="form-submit">Solicitar Diagnóstico Agora →</button>
+        <p style="text-align:center; font-size: 0.72rem; color: var(--gray); margin-top: 0.75rem;">Fale com um especialista em até 15 minutos.</p>
+      </form>
+    </div>
+
+    <!-- SUCESSO -->
+    <div id="form-success" style="display:none; text-align: center; padding: 2rem 0;">
+      <div style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--gold);">✓</div>
+      <h3 style="margin-bottom: 0.5rem;">Recebemos sua solicitação!</h3>
+      <p>Um especialista da Virtus entrará em contato em até 15 minutos.</p>
+    </div>
   </div>
 </div>
 
+
+<script>
+  var formData = {};
+  function nextStep(current, value) {
+    var keys = ['tipo', 'unidades'];
+    formData[keys[current-1]] = value;
+    document.getElementById('form-step-' + current).style.display = 'none';
+    document.getElementById('form-step-' + (current+1)).style.display = 'block';
+  }
+  function submitForm(e) {
+    e.preventDefault();
+    formData.nome = document.getElementById('lead-nome').value;
+    formData.whats = document.getElementById('lead-whats').value;
+    formData.email = document.getElementById('lead-email').value;
+    document.getElementById('form-step-3').style.display = 'none';
+    document.getElementById('form-success').style.display = 'block';
+  }
+  function resetForm() {
+    formData = {};
+    ['form-step-2','form-step-3','form-success'].forEach(function(id){
+      document.getElementById(id).style.display = 'none';
+    });
+    document.getElementById('form-step-1').style.display = 'block';
+  }
+</script>
 </body>
 </html>
